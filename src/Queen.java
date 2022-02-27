@@ -9,7 +9,7 @@ public class Queen extends Piece {
     public boolean isMoveLegal(Square square) {
         Point pos = getCoords();
         Point dest = square.getCoords();
-        if((pos.x - pos.y != dest.x - dest.y && pos.x + pos.y != dest.x + dest.y) || (pos.x == dest.x && pos.y == dest.y) || (pos.x != dest.x && pos.y != dest.y)) {
+        if((pos.x - pos.y != dest.x - dest.y && pos.x + pos.y != dest.x + dest.y) && ((pos.x == dest.x && pos.y == dest.y) || (pos.x != dest.x && pos.y != dest.y))) {
             return false;
         }
         return isPathClear(pos, dest, square);
