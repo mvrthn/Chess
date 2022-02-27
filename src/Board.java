@@ -120,7 +120,7 @@ public class Board extends JPanel implements MouseListener, Runnable {
                 }
                 else if(inMove) {
                     selectedSquare.unselect();
-                    if(!currentPiece.moveIsLegal(square)) {
+                    if(!currentPiece.isMoveLegal(square)) {
                         square = selectedSquare;
                     }
                     currentPiece.setPosition(square.getX(), square.getY());
@@ -128,7 +128,7 @@ public class Board extends JPanel implements MouseListener, Runnable {
                     inMove = false;
                 }
                 else {
-                    if(!currentPiece.moveIsLegal(square)) {
+                    if(!currentPiece.isMoveLegal(square)) {
                         square = selectedSquare;
                     }
                     square.addPiece(currentPiece);
