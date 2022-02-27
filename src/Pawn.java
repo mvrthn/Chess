@@ -21,10 +21,11 @@ public class Pawn extends Piece {
         int dir = (isWhite() ? -1 : 1);
         Point pos = getCoords();
         Point dest = square.getCoords();
+        Square[][] squares = getSquares();
         if(pos.y + dir != dest.y) {
             if(pos.y == (isWhite() ? 6 : 1) && dest.y == (isWhite() ? 4 : 3) && pos.x == dest.x &&
-                    getSquares()[pos.x][dest.y + dir].getPiece() == null &&
-                    getSquares()[pos.x][dest.y + 2 * dir].getPiece() == null) {
+                    squares[pos.x][pos.y + dir].getPiece() == null &&
+                    squares[pos.x][pos.y + 2 * dir].getPiece() == null) {
                 enPassant = true;
                 return true;
             }
@@ -38,8 +39,8 @@ public class Pawn extends Piece {
             if(piece != null) {
                 return isWhite() != piece.isWhite();
             }
-            else return getSquares()[pos.x - (pos.x - dest.x)][pos.y].getPiece() != null
-                    && getSquares()[pos.x - (pos.x - dest.x)][pos.y].getPiece().isEnPassant();
+            else return squares[pos.x - (pos.x - dest.x)][pos.y].getPiece() != null
+                    && squares[pos.x - (pos.x - dest.x)][pos.y].getPiece().isEnPassant();
         }
         else {
             return false;
