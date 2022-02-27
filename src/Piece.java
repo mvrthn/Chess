@@ -63,7 +63,28 @@ public class Piece {
         this.y = y;
     }
 
-    public boolean moveIsLegal(Square square) {
+    public boolean isEnPassant() {
+        return false;
+    }
+
+    public boolean isMoveLegal(Square square) {
+        return true;
+    }
+
+    public boolean isPathClear(Point pos, Point dest, Square square) {
+        if(square.getPiece() != null && (isWhite() == square.getPiece().isWhite())) {
+            return false;
+        }
+        int dirX = (int) Math.signum(dest.x - pos.x);
+        int dirY = (int) Math.signum(dest.y - pos.y);
+        Square[][] squares = getSquares();
+        pos.translate(dirX, dirY);
+        while(!pos.equals(dest)) {
+            if(squares[pos.x][pos.y].getPiece() != null) {
+                return false;
+            }
+            pos.translate(dirX, dirY);
+        }
         return true;
     }
 
