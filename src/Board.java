@@ -55,27 +55,27 @@ public class Board extends JPanel implements MouseListener, Runnable {
     private void defaultSetup() {
         String pre = "pieces/";
         String suf = ".png";
-        pieces.add(new Piece(pre + "whiteKing" + suf, "K", 3, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteQueen" + suf, "Q", 4, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteRook" + suf, "R", 0, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteRook" + suf, "R", 7, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteBishop" + suf, "B", 2, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteBishop" + suf, "B", 5, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteKnight" + suf, "N", 1, 7, size, squares));
-        pieces.add(new Piece(pre + "whiteKnight" + suf, "N", 6, 7, size, squares));
-        pieces.add(new Piece(pre + "blackKing" + suf, "k", 3, 0, size, squares));
-        pieces.add(new Piece(pre + "blackQueen" + suf, "q", 4, 0, size, squares));
-        pieces.add(new Piece(pre + "blackRook" + suf, "r", 0, 0, size, squares));
-        pieces.add(new Piece(pre + "blackRook" + suf, "r", 7, 0, size, squares));
-        pieces.add(new Piece(pre + "blackBishop" + suf, "b", 2, 0, size, squares));
-        pieces.add(new Piece(pre + "blackBishop" + suf, "b", 5, 0, size, squares));
-        pieces.add(new Piece(pre + "blackKnight" + suf, "n", 1, 0, size, squares));
-        pieces.add(new Piece(pre + "blackKnight" + suf, "n", 6, 0, size, squares));
+        pieces.add(new King(true, 3, 7, size, squares));
+        pieces.add(new Queen(true, 4, 7, size, squares));
+        pieces.add(new Rook(true, 0, 7, size, squares));
+        pieces.add(new Rook(true, 7, 7, size, squares));
+        pieces.add(new Bishop(true, 2, 7, size, squares));
+        pieces.add(new Bishop(true, 5, 7, size, squares));
+        pieces.add(new Knight(true, 1, 7, size, squares));
+        pieces.add(new Knight(true, 6, 7, size, squares));
+        pieces.add(new King(false, 3, 0, size, squares));
+        pieces.add(new Queen(false, 4, 0, size, squares));
+        pieces.add(new Rook(false, 0, 0, size, squares));
+        pieces.add(new Rook(false, 7, 0, size, squares));
+        pieces.add(new Bishop(false, 2, 0, size, squares));
+        pieces.add(new Bishop(false, 5, 0, size, squares));
+        pieces.add(new Knight(false, 1, 0, size, squares));
+        pieces.add(new Knight(false, 6, 0, size, squares));
         for(int i = 0; i < 8; i++) {
-            pieces.add(new Piece(pre + "whitePawn" + suf, "P", i, 6, size, squares));
+            pieces.add(new Pawn(true, i, 6, size, squares));
         }
         for(int i = 0; i < 8; i++) {
-            pieces.add(new Piece(pre + "blackPawn" + suf, "p", i, 1, size, squares));
+            pieces.add(new Pawn(false, i, 1, size, squares));
         }
     }
 
