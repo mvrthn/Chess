@@ -6,11 +6,14 @@ public class Knight extends Piece {
     }
 
     @Override
-    public boolean isMoveLegal(Square square) {
+    public boolean isMoveLegal(Square square, Piece king) {
         Point pos = getCoords();
         Point dest = square.getCoords();
-        return ((Math.abs(pos.x - dest.x) == 1 && Math.abs(pos.y - dest.y) == 2) ||
+        if(!((Math.abs(pos.x - dest.x) == 1 && Math.abs(pos.y - dest.y) == 2) ||
                 (Math.abs(pos.x - dest.x) == 2 && Math.abs(pos.y - dest.y) == 1)) &&
-                (square.getPiece() == null || square.getPiece().isWhite() != isWhite());
+                (square.getPiece() == null || square.getPiece().isWhite() != isWhite())) {
+            return false;
+        }
+        return !kingInDanger(dest, king.getCoords());
     }
 }

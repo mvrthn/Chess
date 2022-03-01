@@ -14,7 +14,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean isMoveLegal(Square square) {
+    public boolean isMoveLegal(Square square, Piece king) {
         if(enPassant) {
             enPassant = false;
         }
@@ -22,6 +22,9 @@ public class Pawn extends Piece {
         Point pos = getCoords();
         Point dest = square.getCoords();
         Square[][] squares = getSquares();
+        if(kingInDanger(dest, king.getCoords())) {
+            return false;
+        }
         if(pos.y + dir != dest.y) {
             if(pos.y == (isWhite() ? 6 : 1) && dest.y == (isWhite() ? 4 : 3) && pos.x == dest.x &&
                     squares[pos.x][pos.y + dir].getPiece() == null &&

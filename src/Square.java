@@ -3,8 +3,8 @@ import java.awt.*;
 
 public class Square extends JPanel {
     private final boolean isWhite;
-    private int i;
-    private int j;
+    private final int i;
+    private final int j;
     private boolean isOccupied;
     private Piece piece;
 
@@ -31,12 +31,8 @@ public class Square extends JPanel {
         piece.setCoords(i, j);
     }
 
-    public Piece removePiece() {
-        if(isOccupied) {
+    public void removePiece() {
             isOccupied = false;
-            return piece;
-        }
-        return null;
     }
 
     public void select() {

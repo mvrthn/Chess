@@ -9,12 +9,16 @@ public class Board extends JPanel implements MouseListener, Runnable {
     private int size;
     public final Square[][] squares;
     private List<Piece> pieces;
+    private List<Piece> takenPieces;
     private Square selectedSquare;
     private Piece currentPiece;
+    private King wKing;
+    private King bKing;
     private boolean inMove;
-    private boolean mouseOutOfBounds;
+    private boolean noMove;
     private Thread thread;
     private boolean running;
+    private boolean whiteOnMove;
 
     public Board() {
         size = 80;
@@ -32,10 +36,14 @@ public class Board extends JPanel implements MouseListener, Runnable {
         pieces = new ArrayList<>();
         defaultSetup();
 
+        takenPieces = new ArrayList<>();
+
         selectedSquare = null;
         currentPiece = null;
         inMove = false;
-        mouseOutOfBounds = false;
+        noMove = false;
+
+        whiteOnMove = true;
 
         addMouseListener(this);
     }
@@ -53,16 +61,18 @@ public class Board extends JPanel implements MouseListener, Runnable {
     }
 
     private void defaultSetup() {
-        pieces.add(new King(true, 3, 7, size, squares));
-        pieces.add(new Queen(true, 4, 7, size, squares));
+        wKing = new King(true, 4, 7, size, squares);
+        pieces.add(wKing);
+        pieces.add(new Queen(true, 3, 7, size, squares));
         pieces.add(new Rook(true, 0, 7, size, squares));
         pieces.add(new Rook(true, 7, 7, size, squares));
         pieces.add(new Bishop(true, 2, 7, size, squares));
         pieces.add(new Bishop(true, 5, 7, size, squares));
         pieces.add(new Knight(true, 1, 7, size, squares));
         pieces.add(new Knight(true, 6, 7, size, squares));
-        pieces.add(new King(false, 3, 0, size, squares));
-        pieces.add(new Queen(false, 4, 0, size, squares));
+        bKing = new King(false, 4, 0, size, squares);
+        pieces.add(bKing);
+        pieces.add(new Queen(false, 3, 0, size, squares));
         pieces.add(new Rook(false, 0, 0, size, squares));
         pieces.add(new Rook(false, 7, 0, size, squares));
         pieces.add(new Bishop(false, 2, 0, size, squares));
@@ -91,13 +101,19 @@ public class Board extends JPanel implements MouseListener, Runnable {
     public void mousePressed(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON1) {
             Square square = getSquare(e.getX(), e.getY());
-            Piece piece = square.removePiece();
-            if(piece != null) {
+            Piece piece = square.getPiece();
+            if(piece != null && piece.isWhite() == whiteOnMove) {
+                square.removePiece();
                 selectedSquare = square;
                 currentPiece = piece;
+                pieces.remove(currentPiece);
+                pieces.add(currentPiece);
                 thread = new Thread(this);
                 thread.start();
                 repaint();
+            }
+            else {
+                noMove = true;
             }
         }
     }
@@ -105,7 +121,7 @@ public class Board extends JPanel implements MouseListener, Runnable {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON1) {
-            if(!mouseOutOfBounds) {
+            if(!noMove) {
                 terminate();
                 try {
                     thread.join();
@@ -113,31 +129,23 @@ public class Board extends JPanel implements MouseListener, Runnable {
                     ex.printStackTrace();
                 }
                 Square square = getSquare(e.getX(), e.getY());
-                if(square == selectedSquare) {
-                    currentPiece.setPosition(square.getX(), square.getY());
-                    inMove = true;
-                    selectedSquare.select();
+                if (square != selectedSquare && !currentPiece.isMoveLegal(square, (whiteOnMove ? wKing : bKing))) {
+                    square = selectedSquare;
                 }
-                else if(inMove) {
-                    selectedSquare.unselect();
-                    if(!currentPiece.isMoveLegal(square)) {
-                        square = selectedSquare;
-                    }
-                    currentPiece.setPosition(square.getX(), square.getY());
-                    square.addPiece(currentPiece);
-                    inMove = false;
+                if(square != selectedSquare) {
+                    whiteOnMove = !whiteOnMove;
                 }
-                else {
-                    if(!currentPiece.isMoveLegal(square)) {
-                        square = selectedSquare;
-                    }
-                    square.addPiece(currentPiece);
-                    currentPiece.setPosition(square.getX(), square.getY());
+                Piece piece = square.getPiece();
+                if(piece != null) {
+                    pieces.remove(piece);
+                    takenPieces.add(piece);
                 }
+                square.addPiece(currentPiece);
+                currentPiece.setPosition(square.getX(), square.getY());
                 repaint();
             }
             else {
-                mouseOutOfBounds = false;
+                noMove = false;
             }
         }
     }
@@ -165,7 +173,7 @@ public class Board extends JPanel implements MouseListener, Runnable {
                 currentPiece.setPosition(position.x - size / 2, position.y - size / 2);
             } else {
                 running = false;
-                mouseOutOfBounds = true;
+                noMove = true;
                 currentPiece.setPosition(selectedSquare.getX(), selectedSquare.getY());
                 selectedSquare.addPiece(currentPiece);
             }
